@@ -1,0 +1,135 @@
+import '/auth/firebase_auth/auth_util.dart';
+import '/backend/backend.dart';
+import '/flutter_flow/flutter_flow_count_controller.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'countercart_model.dart';
+export 'countercart_model.dart';
+
+class CountercartWidget extends StatefulWidget {
+  const CountercartWidget({Key? key}) : super(key: key);
+
+  @override
+  _CountercartWidgetState createState() => _CountercartWidgetState();
+}
+
+class _CountercartWidgetState extends State<CountercartWidget> {
+  late CountercartModel _model;
+
+  @override
+  void setState(VoidCallback callback) {
+    super.setState(callback);
+    _model.onUpdate();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _model = createModel(context, () => CountercartModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _model.maybeDispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
+    return Padding(
+      padding: EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 2.0, 0.0),
+      child: StreamBuilder<List<SelectedItemsRecord>>(
+        stream: querySelectedItemsRecord(
+          singleRecord: true,
+        ),
+        builder: (context, snapshot) {
+          // Customize what your widget looks like when it's loading.
+          if (!snapshot.hasData) {
+            return Center(
+              child: SizedBox(
+                width: 50.0,
+                height: 50.0,
+                child: SpinKitPulse(
+                  color: FlutterFlowTheme.of(context).primary,
+                  size: 50.0,
+                ),
+              ),
+            );
+          }
+          List<SelectedItemsRecord> countControllerSelectedItemsRecordList =
+              snapshot.data!;
+          // Return an empty Container when the item does not exist.
+          if (snapshot.data!.isEmpty) {
+            return Container();
+          }
+          final countControllerSelectedItemsRecord =
+              countControllerSelectedItemsRecordList.isNotEmpty
+                  ? countControllerSelectedItemsRecordList.first
+                  : null;
+          return Container(
+            width: 80.0,
+            height: 30.0,
+            decoration: BoxDecoration(
+              color: FlutterFlowTheme.of(context).accent4,
+              borderRadius: BorderRadius.circular(8.0),
+              shape: BoxShape.rectangle,
+              border: Border.all(
+                color: Color(0x94249689),
+                width: 2.0,
+              ),
+            ),
+            child: FlutterFlowCountController(
+              decrementIconBuilder: (enabled) => FaIcon(
+                FontAwesomeIcons.minus,
+                color: enabled
+                    ? Colors.black
+                    : FlutterFlowTheme.of(context).alternate,
+                size: 10.0,
+              ),
+              incrementIconBuilder: (enabled) => FaIcon(
+                FontAwesomeIcons.plus,
+                color: enabled
+                    ? Colors.black
+                    : FlutterFlowTheme.of(context).alternate,
+                size: 10.0,
+              ),
+              countBuilder: (count) => Text(
+                count.toString(),
+                style: FlutterFlowTheme.of(context).titleLarge.override(
+                      fontFamily: 'Outfit',
+                      fontSize: 15.0,
+                    ),
+              ),
+              count: _model.countControllerValue ??=
+                  countControllerSelectedItemsRecord!.quantity,
+              updateCount: (count) async {
+                setState(() => _model.countControllerValue = count);
+                logFirebaseEvent('COUNTERCART_CountController_kvym40z4_ON_');
+                logFirebaseEvent('CountController_backend_call');
+
+                await countControllerSelectedItemsRecord!.reference
+                    .update(createSelectedItemsRecordData(
+                  quantity: _model.countControllerValue,
+                ));
+              },
+              stepSize: 1,
+              contentPadding:
+                  EdgeInsetsDirectional.fromSTEB(10.0, 0.0, 10.0, 0.0),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
