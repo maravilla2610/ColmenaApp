@@ -39,7 +39,6 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
     super.initState();
     _model = createModel(context, () => ItemDetailModel());
 
-    logFirebaseEvent('screen_view', parameters: {'screen_name': 'ItemDetail'});
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -527,7 +526,7 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     0.0, 4.0, 0.0, 0.0),
                                 child: Text(
-                                  '${widget.itemParameter!.quantity.toString()}Item',
+                                  'Item',
                                   style: FlutterFlowTheme.of(context)
                                       .bodyMedium
                                       .override(

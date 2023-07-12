@@ -1,3 +1,4 @@
+import '/auth/base_auth_user_provider.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/app_bar_widget.dart';
@@ -8,15 +9,14 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/request_manager.dart';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 
 class HomePageModel extends FlutterFlowModel {
@@ -32,8 +32,6 @@ class HomePageModel extends FlutterFlowModel {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
-  // Stores action output result for [Firestore Query - Query a collection] action in HomePage widget.
-  UsuariosRecord? load;
   // Model for Dropdown07Account component.
   late Dropdown07AccountModel dropdown07AccountModel;
   // Model for appBar component.
@@ -41,16 +39,21 @@ class HomePageModel extends FlutterFlowModel {
   // State field(s) for TextField widget.
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
+  // State field(s) for ListView widget.
+  PagingController<DocumentSnapshot?, ProductosRecord>? pagingController;
+  Query? pagingQuery;
+  List<StreamSubscription?> streamSubscriptions = [];
+
   // Models for product dynamic component.
   late FlutterFlowDynamicModels<ProductModel> productModels;
 
   /// Query cache managers for this widget.
 
-  final _homeManager = StreamRequestManager<List<ProductosRecord>>();
-  Stream<List<ProductosRecord>> home({
+  final _homeManager = FutureRequestManager<List<ProductosRecord>>();
+  Future<List<ProductosRecord>> home({
     String? uniqueQueryKey,
     bool? overrideCache,
-    required Stream<List<ProductosRecord>> Function() requestFn,
+    required Future<List<ProductosRecord>> Function() requestFn,
   }) =>
       _homeManager.performRequest(
         uniqueQueryKey: uniqueQueryKey,
@@ -75,6 +78,7 @@ class HomePageModel extends FlutterFlowModel {
     dropdown07AccountModel.dispose();
     appBarModel.dispose();
     textController?.dispose();
+    streamSubscriptions.forEach((s) => s?.cancel());
     productModels.dispose();
 
     /// Dispose query cache managers for this widget.

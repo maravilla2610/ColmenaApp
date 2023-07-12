@@ -131,7 +131,6 @@ class _DespensaWidgetState extends State<DespensaWidget>
     super.initState();
     _model = createModel(context, () => DespensaModel());
 
-    logFirebaseEvent('screen_view', parameters: {'screen_name': 'Despensa'});
     setupAnimations(
       animationsMap.values.where((anim) =>
           anim.trigger == AnimationTrigger.onActionTrigger ||

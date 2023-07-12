@@ -130,7 +130,6 @@ class _AseoWidgetState extends State<AseoWidget> with TickerProviderStateMixin {
     super.initState();
     _model = createModel(context, () => AseoModel());
 
-    logFirebaseEvent('screen_view', parameters: {'screen_name': 'Aseo'});
     setupAnimations(
       animationsMap.values.where((anim) =>
           anim.trigger == AnimationTrigger.onActionTrigger ||

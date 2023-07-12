@@ -70,7 +70,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
     super.initState();
     _model = createModel(context, () => LoginPageModel());
 
-    logFirebaseEvent('screen_view', parameters: {'screen_name': 'loginPage'});
     _model.emailAddressController ??= TextEditingController();
     _model.passwordController ??= TextEditingController();
 

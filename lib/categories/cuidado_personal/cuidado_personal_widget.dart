@@ -131,8 +131,6 @@ class _CuidadoPersonalWidgetState extends State<CuidadoPersonalWidget>
     super.initState();
     _model = createModel(context, () => CuidadoPersonalModel());
 
-    logFirebaseEvent('screen_view',
-        parameters: {'screen_name': 'CuidadoPersonal'});
     setupAnimations(
       animationsMap.values.where((anim) =>
           anim.trigger == AnimationTrigger.onActionTrigger ||
