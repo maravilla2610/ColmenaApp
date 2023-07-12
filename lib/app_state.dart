@@ -14,12 +14,19 @@ class FFAppState extends ChangeNotifier {
 
   FFAppState._internal();
 
-  Future initializePersistedState() async {}
+  Future initializePersistedState() async {
+    prefs = await SharedPreferences.getInstance();
+    _safeInit(() {
+      _token = prefs.getString('ff_token') ?? _token;
+    });
+  }
 
   void update(VoidCallback callback) {
     callback();
     notifyListeners();
   }
+
+  late SharedPreferences prefs;
 
   List<DocumentReference> _cart = [];
   List<DocumentReference> get cart => _cart;
@@ -50,6 +57,13 @@ class FFAppState extends ChangeNotifier {
   double get sum => _sum;
   set sum(double _value) {
     _sum = _value;
+  }
+
+  String _token = '';
+  String get token => _token;
+  set token(String _value) {
+    _token = _value;
+    prefs.setString('ff_token', _value);
   }
 }
 

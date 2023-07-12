@@ -295,7 +295,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             0.0, 16.0, 0.0, 12.0),
                         child: AuthUserStreamWidget(
                           builder: (context) => Text(
-                            currentUserDisplayName,
+                            valueOrDefault(currentUserDocument?.name, ''),
                             textAlign: TextAlign.center,
                             style: FlutterFlowTheme.of(context)
                                 .headlineSmall

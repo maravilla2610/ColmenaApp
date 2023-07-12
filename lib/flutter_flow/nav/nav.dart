@@ -98,14 +98,8 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
                 ),
         ),
         FFRoute(
-          name: 'loginPage',
-          path: '/loginPage',
-          builder: (context, params) => LoginPageWidget(),
-        ),
-        FFRoute(
           name: 'checkout',
           path: '/checkout',
-          requireAuth: true,
           builder: (context, params) => CheckoutWidget(),
         ),
         FFRoute(
@@ -178,6 +172,17 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => ItemDetailWidget(
             itemParameter: params.getParam('itemParameter', ParamType.Document),
           ),
+        ),
+        FFRoute(
+          name: 'loginPage',
+          path: '/loginPage',
+          builder: (context, params) => LoginPageWidget(),
+        ),
+        FFRoute(
+          name: 'Onboarding1',
+          path: '/onboarding1',
+          requireAuth: true,
+          builder: (context, params) => Onboarding1Widget(),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

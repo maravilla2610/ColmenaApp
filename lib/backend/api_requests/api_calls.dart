@@ -25,14 +25,14 @@ class JwtCall {
           'https://us-central1-colmena-d4b91.cloudfunctions.net/generateToken1',
       callType: ApiCallType.POST,
       headers: {
-        'Content-Type': 'application/json',
+        'Authorization': 'Bearer \${token}',
       },
       params: {},
       body: body,
       bodyType: BodyType.JSON,
       returnBody: true,
-      encodeBodyUtf8: false,
-      decodeUtf8: false,
+      encodeBodyUtf8: true,
+      decodeUtf8: true,
       cache: false,
     );
   }
