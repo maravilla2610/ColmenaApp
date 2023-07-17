@@ -40,12 +40,11 @@ class HomePageModel extends FlutterFlowModel {
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
   // State field(s) for ListView widget.
-  PagingController<DocumentSnapshot?, ProductosRecord>? pagingController;
-  Query? pagingQuery;
-  List<StreamSubscription?> streamSubscriptions = [];
 
-  // Models for product dynamic component.
-  late FlutterFlowDynamicModels<ProductModel> productModels;
+  PagingController<DocumentSnapshot?, ProductosRecord>?
+      listViewPagingController;
+  Query? listViewPagingQuery;
+  List<StreamSubscription?> listViewStreamSubscriptions = [];
 
   /// Query cache managers for this widget.
 
@@ -70,7 +69,6 @@ class HomePageModel extends FlutterFlowModel {
     dropdown07AccountModel =
         createModel(context, () => Dropdown07AccountModel());
     appBarModel = createModel(context, () => AppBarModel());
-    productModels = FlutterFlowDynamicModels(() => ProductModel());
   }
 
   void dispose() {
@@ -78,8 +76,8 @@ class HomePageModel extends FlutterFlowModel {
     dropdown07AccountModel.dispose();
     appBarModel.dispose();
     textController?.dispose();
-    streamSubscriptions.forEach((s) => s?.cancel());
-    productModels.dispose();
+    listViewStreamSubscriptions.forEach((s) => s?.cancel());
+    listViewPagingController?.dispose();
 
     /// Dispose query cache managers for this widget.
 
@@ -91,4 +89,35 @@ class HomePageModel extends FlutterFlowModel {
   Future menu(BuildContext context) async {}
 
   /// Additional helper methods are added here.
+
+  PagingController<DocumentSnapshot?, ProductosRecord> setListViewController(
+    Query query, {
+    DocumentReference<Object?>? parent,
+  }) {
+    listViewPagingController ??= _createListViewController(query, parent);
+    if (listViewPagingQuery != query) {
+      listViewPagingQuery = query;
+      listViewPagingController?.refresh();
+    }
+    return listViewPagingController!;
+  }
+
+  PagingController<DocumentSnapshot?, ProductosRecord>
+      _createListViewController(
+    Query query,
+    DocumentReference<Object?>? parent,
+  ) {
+    final controller = PagingController<DocumentSnapshot?, ProductosRecord>(
+        firstPageKey: null);
+    return controller
+      ..addPageRequestListener(
+        (nextPageMarker) => queryProductosRecordPage(
+          nextPageMarker: nextPageMarker,
+          streamSubscriptions: listViewStreamSubscriptions,
+          controller: controller,
+          pageSize: 25,
+          isStream: true,
+        ),
+      );
+  }
 }

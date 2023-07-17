@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
 import '/backend/stripe/payment_manager.dart';
 import '/components/countercart_widget.dart';
@@ -168,9 +169,10 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                         0.0, 0.0, 0.0, 12.0),
                                     child: Builder(
                                       builder: (context) {
-                                        final cartItems = checkoutCartRecord!
-                                            .selectedItemsLst
-                                            .toList();
+                                        final cartItems = checkoutCartRecord
+                                                ?.selectedItemsLst
+                                                ?.toList() ??
+                                            [];
                                         return ListView.builder(
                                           padding: EdgeInsets.zero,
                                           shrinkWrap: true,
@@ -426,8 +428,8 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                                                 'selectedItemsLst':
                                                                     FieldValue
                                                                         .arrayRemove([
-                                                                  rowSelectedItemsRecord!
-                                                                      .reference
+                                                                  rowSelectedItemsRecord
+                                                                      ?.reference
                                                                 ]),
                                                                 'itemCount': FieldValue
                                                                     .increment(
@@ -444,9 +446,9 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                                                   .reference
                                                                   .delete();
                                                             }
-                                                            if (checkoutCartRecord!
-                                                                    .selectedItemsLst
-                                                                    .length ==
+                                                            if (checkoutCartRecord
+                                                                    ?.selectedItemsLst
+                                                                    ?.length ==
                                                                 0) {
                                                               logFirebaseEvent(
                                                                   'Button_navigate_to');
@@ -764,8 +766,8 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                                     Text(
                                                       functions
                                                           .percentage(
-                                                              checkoutCartRecord!
-                                                                  .amount)
+                                                              checkoutCartRecord
+                                                                  ?.amount)
                                                           .toString(),
                                                       textAlign: TextAlign.end,
                                                       style:
@@ -926,13 +928,13 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                         30.0),
                                     status: 'En espera',
                                     tax: functions
-                                        .percentage(checkoutCartRecord!.amount),
+                                        .percentage(checkoutCartRecord?.amount),
                                     createdAt: getCurrentTimestamp,
                                     creator: currentUserReference,
-                                    cart: buttonCartRecord!.reference,
+                                    cart: buttonCartRecord?.reference,
                                   ),
                                   'itemsList':
-                                      buttonCartRecord!.selectedItemsLst,
+                                      buttonCartRecord?.selectedItemsLst,
                                 });
                                 _model.orden = OrderRecord.getDocumentFromData({
                                   ...createOrderRecordData(
@@ -943,14 +945,26 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                         30.0),
                                     status: 'En espera',
                                     tax: functions
-                                        .percentage(checkoutCartRecord!.amount),
+                                        .percentage(checkoutCartRecord?.amount),
                                     createdAt: getCurrentTimestamp,
                                     creator: currentUserReference,
-                                    cart: buttonCartRecord!.reference,
+                                    cart: buttonCartRecord?.reference,
                                   ),
                                   'itemsList':
-                                      buttonCartRecord!.selectedItemsLst,
+                                      buttonCartRecord?.selectedItemsLst,
                                 }, orderRecordReference);
+                                logFirebaseEvent('Button_backend_call');
+
+                                await buttonCartRecord!.reference
+                                    .update(createCartRecordData(
+                                  isActive: false,
+                                ));
+                                logFirebaseEvent('Button_backend_call');
+
+                                await currentUserReference!.update({
+                                  'orderLst': FieldValue.arrayUnion(
+                                      [_model.orden?.reference]),
+                                });
                                 logFirebaseEvent('Button_stripe_payment');
                                 final paymentResponse =
                                     await processStripePayment(
@@ -983,6 +997,12 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                   return;
                                 }
                                 _model.paymentId = paymentResponse.paymentId!;
+
+                                logFirebaseEvent('Button_backend_call');
+                                _model.apiResult0bd = await WhatsAppCall.call(
+                                  phoneNumber: currentPhoneNumber,
+                                  message: 'Tu pedido esta en camino :)',
+                                );
 
                                 setState(() {});
                               },

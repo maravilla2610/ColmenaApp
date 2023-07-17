@@ -389,25 +389,25 @@ class _ProductWidgetState extends State<ProductWidget> {
                                                               firestoreBatch.set(
                                                                   selectedItemsRecordReference1,
                                                                   createSelectedItemsRecordData(
-                                                                    item: cardProduct43ProductosRecord!
-                                                                        .reference,
-                                                                    name: cardProduct43ProductosRecord!
-                                                                        .productName,
+                                                                    item: cardProduct43ProductosRecord
+                                                                        ?.reference,
+                                                                    name: cardProduct43ProductosRecord
+                                                                        ?.productName,
                                                                     description:
-                                                                        cardProduct43ProductosRecord!
-                                                                            .productDescription,
-                                                                    image: cardProduct43ProductosRecord!
-                                                                        .imageURL,
-                                                                    price: cardProduct43ProductosRecord!
-                                                                        .costo1,
+                                                                        cardProduct43ProductosRecord
+                                                                            ?.productDescription,
+                                                                    image: cardProduct43ProductosRecord
+                                                                        ?.imageURL,
+                                                                    price: cardProduct43ProductosRecord
+                                                                        ?.costo1,
                                                                     creator:
                                                                         currentUserReference,
                                                                     subTotal: functions.calculateSubtotal(
                                                                         _model
                                                                             .counterModel
                                                                             .countControllerValue,
-                                                                        cardProduct43ProductosRecord!
-                                                                            .costo1),
+                                                                        cardProduct43ProductosRecord
+                                                                            ?.costo1),
                                                                     quantity: _model
                                                                         .counterModel
                                                                         .countControllerValue,
@@ -417,19 +417,19 @@ class _ProductWidgetState extends State<ProductWidget> {
                                                                       .getDocumentFromData(
                                                                           createSelectedItemsRecordData(
                                                                             item:
-                                                                                cardProduct43ProductosRecord!.reference,
+                                                                                cardProduct43ProductosRecord?.reference,
                                                                             name:
-                                                                                cardProduct43ProductosRecord!.productName,
+                                                                                cardProduct43ProductosRecord?.productName,
                                                                             description:
-                                                                                cardProduct43ProductosRecord!.productDescription,
+                                                                                cardProduct43ProductosRecord?.productDescription,
                                                                             image:
-                                                                                cardProduct43ProductosRecord!.imageURL,
+                                                                                cardProduct43ProductosRecord?.imageURL,
                                                                             price:
-                                                                                cardProduct43ProductosRecord!.costo1,
+                                                                                cardProduct43ProductosRecord?.costo1,
                                                                             creator:
                                                                                 currentUserReference,
                                                                             subTotal:
-                                                                                functions.calculateSubtotal(_model.counterModel.countControllerValue, cardProduct43ProductosRecord!.costo1),
+                                                                                functions.calculateSubtotal(_model.counterModel.countControllerValue, cardProduct43ProductosRecord?.costo1),
                                                                             quantity:
                                                                                 _model.counterModel.countControllerValue,
                                                                           ),
@@ -453,8 +453,8 @@ class _ProductWidgetState extends State<ProductWidget> {
                                                                         FieldValue
                                                                             .arrayUnion([
                                                                       _model
-                                                                          .produtoCreadoExiste!
-                                                                          .reference
+                                                                          .produtoCreadoExiste
+                                                                          ?.reference
                                                                     ]),
                                                                     'amount': FieldValue.increment(_model
                                                                         .produtoCreadoExiste!
@@ -471,23 +471,23 @@ class _ProductWidgetState extends State<ProductWidget> {
                                                               firestoreBatch.set(
                                                                   selectedItemsRecordReference2,
                                                                   createSelectedItemsRecordData(
-                                                                    item: cardProduct43ProductosRecord!
-                                                                        .reference,
-                                                                    name: cardProduct43ProductosRecord!
-                                                                        .productName,
+                                                                    item: cardProduct43ProductosRecord
+                                                                        ?.reference,
+                                                                    name: cardProduct43ProductosRecord
+                                                                        ?.productName,
                                                                     description:
-                                                                        cardProduct43ProductosRecord!
-                                                                            .productDescription,
-                                                                    image: cardProduct43ProductosRecord!
-                                                                        .imageURL,
-                                                                    price: cardProduct43ProductosRecord!
-                                                                        .costo1,
+                                                                        cardProduct43ProductosRecord
+                                                                            ?.productDescription,
+                                                                    image: cardProduct43ProductosRecord
+                                                                        ?.imageURL,
+                                                                    price: cardProduct43ProductosRecord
+                                                                        ?.costo1,
                                                                     subTotal: functions.calculateSubtotal(
                                                                         _model
                                                                             .counterModel
                                                                             .countControllerValue,
-                                                                        cardProduct43ProductosRecord!
-                                                                            .costo1),
+                                                                        cardProduct43ProductosRecord
+                                                                            ?.costo1),
                                                                     creator:
                                                                         currentUserReference,
                                                                     quantity: _model
@@ -499,17 +499,17 @@ class _ProductWidgetState extends State<ProductWidget> {
                                                                       .getDocumentFromData(
                                                                           createSelectedItemsRecordData(
                                                                             item:
-                                                                                cardProduct43ProductosRecord!.reference,
+                                                                                cardProduct43ProductosRecord?.reference,
                                                                             name:
-                                                                                cardProduct43ProductosRecord!.productName,
+                                                                                cardProduct43ProductosRecord?.productName,
                                                                             description:
-                                                                                cardProduct43ProductosRecord!.productDescription,
+                                                                                cardProduct43ProductosRecord?.productDescription,
                                                                             image:
-                                                                                cardProduct43ProductosRecord!.imageURL,
+                                                                                cardProduct43ProductosRecord?.imageURL,
                                                                             price:
-                                                                                cardProduct43ProductosRecord!.costo1,
+                                                                                cardProduct43ProductosRecord?.costo1,
                                                                             subTotal:
-                                                                                functions.calculateSubtotal(_model.counterModel.countControllerValue, cardProduct43ProductosRecord!.costo1),
+                                                                                functions.calculateSubtotal(_model.counterModel.countControllerValue, cardProduct43ProductosRecord?.costo1),
                                                                             creator:
                                                                                 currentUserReference,
                                                                             quantity:
@@ -536,14 +536,14 @@ class _ProductWidgetState extends State<ProductWidget> {
                                                                           _model
                                                                               .counterModel
                                                                               .countControllerValue,
-                                                                          cardProduct43ProductosRecord!
-                                                                              .costo1),
+                                                                          cardProduct43ProductosRecord
+                                                                              ?.costo1),
                                                                     ),
                                                                     'selectedItemsLst':
                                                                         [
                                                                       _model
-                                                                          .productoCread!
-                                                                          .reference
+                                                                          .productoCread
+                                                                          ?.reference
                                                                     ],
                                                                   });
                                                             }
@@ -663,8 +663,8 @@ class _ProductWidgetState extends State<ProductWidget> {
                                                         .countControllerValue,
                                                     1,
                                                   ),
-                                                  cardProduct43ProductosRecord!
-                                                      .costo1),
+                                                  cardProduct43ProductosRecord
+                                                      ?.costo1),
                                               formatType: FormatType.decimal,
                                               decimalType:
                                                   DecimalType.periodDecimal,

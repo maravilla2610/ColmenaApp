@@ -278,7 +278,7 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                                 formatNumber(
                                   functions.calculateSubtotal(
                                       _model.countControllerValue,
-                                      widget.itemParameter!.costo1),
+                                      widget.itemParameter?.costo1),
                                   formatType: FormatType.decimal,
                                   decimalType: DecimalType.periodDecimal,
                                   currency: '',
@@ -394,31 +394,31 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                                 SelectedItemsRecord.collection.doc();
                             await selectedItemsRecordReference1
                                 .set(createSelectedItemsRecordData(
-                              item: widget.itemParameter!.reference,
-                              name: widget.itemParameter!.productName,
+                              item: widget.itemParameter?.reference,
+                              name: widget.itemParameter?.productName,
                               description:
-                                  widget.itemParameter!.productDescription,
-                              image: widget.itemParameter!.imageURL,
-                              price: widget.itemParameter!.costo1,
+                                  widget.itemParameter?.productDescription,
+                              image: widget.itemParameter?.imageURL,
+                              price: widget.itemParameter?.costo1,
                               creator: currentUserReference,
                               subTotal: functions.calculateSubtotal(
                                   _model.countControllerValue,
-                                  widget.itemParameter!.costo1),
+                                  widget.itemParameter?.costo1),
                               quantity: _model.countControllerValue,
                             ));
                             _model.produtoCreadoExiste =
                                 SelectedItemsRecord.getDocumentFromData(
                                     createSelectedItemsRecordData(
-                                      item: widget.itemParameter!.reference,
-                                      name: widget.itemParameter!.productName,
+                                      item: widget.itemParameter?.reference,
+                                      name: widget.itemParameter?.productName,
                                       description: widget
-                                          .itemParameter!.productDescription,
-                                      image: widget.itemParameter!.imageURL,
-                                      price: widget.itemParameter!.costo1,
+                                          .itemParameter?.productDescription,
+                                      image: widget.itemParameter?.imageURL,
+                                      price: widget.itemParameter?.costo1,
                                       creator: currentUserReference,
                                       subTotal: functions.calculateSubtotal(
                                           _model.countControllerValue,
-                                          widget.itemParameter!.costo1),
+                                          widget.itemParameter?.costo1),
                                       quantity: _model.countControllerValue,
                                     ),
                                     selectedItemsRecordReference1);
@@ -428,11 +428,11 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                               'itemCount': FieldValue.increment(
                                   _model.countControllerValue!),
                               'selectedItemsLst': FieldValue.arrayUnion(
-                                  [_model.produtoCreadoExiste!.reference]),
+                                  [_model.produtoCreadoExiste?.reference]),
                               'amount': FieldValue.increment(
                                   functions.calculateSubtotal(
                                       _model.countControllerValue,
-                                      widget.itemParameter!.costo1)!),
+                                      widget.itemParameter?.costo1)!),
                             });
                           } else {
                             logFirebaseEvent('Container_backend_call');
@@ -441,30 +441,30 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                                 SelectedItemsRecord.collection.doc();
                             await selectedItemsRecordReference2
                                 .set(createSelectedItemsRecordData(
-                              item: widget.itemParameter!.reference,
-                              name: widget.itemParameter!.productName,
+                              item: widget.itemParameter?.reference,
+                              name: widget.itemParameter?.productName,
                               description:
-                                  widget.itemParameter!.productDescription,
-                              image: widget.itemParameter!.imageURL,
-                              price: widget.itemParameter!.costo1,
+                                  widget.itemParameter?.productDescription,
+                              image: widget.itemParameter?.imageURL,
+                              price: widget.itemParameter?.costo1,
                               subTotal: functions.calculateSubtotal(
                                   _model.countControllerValue,
-                                  widget.itemParameter!.costo1),
+                                  widget.itemParameter?.costo1),
                               creator: currentUserReference,
                               quantity: _model.countControllerValue,
                             ));
                             _model.productoCread =
                                 SelectedItemsRecord.getDocumentFromData(
                                     createSelectedItemsRecordData(
-                                      item: widget.itemParameter!.reference,
-                                      name: widget.itemParameter!.productName,
+                                      item: widget.itemParameter?.reference,
+                                      name: widget.itemParameter?.productName,
                                       description: widget
-                                          .itemParameter!.productDescription,
-                                      image: widget.itemParameter!.imageURL,
-                                      price: widget.itemParameter!.costo1,
+                                          .itemParameter?.productDescription,
+                                      image: widget.itemParameter?.imageURL,
+                                      price: widget.itemParameter?.costo1,
                                       subTotal: functions.calculateSubtotal(
                                           _model.countControllerValue,
-                                          widget.itemParameter!.costo1),
+                                          widget.itemParameter?.costo1),
                                       creator: currentUserReference,
                                       quantity: _model.countControllerValue,
                                     ),
@@ -478,10 +478,10 @@ class _ItemDetailWidgetState extends State<ItemDetailWidget> {
                                 isActive: true,
                                 amount: functions.calculateSubtotal(
                                     _model.countControllerValue,
-                                    widget.itemParameter!.costo1),
+                                    widget.itemParameter?.costo1),
                               ),
                               'selectedItemsLst': [
-                                _model.productoCread!.reference
+                                _model.productoCread?.reference
                               ],
                             });
                           }

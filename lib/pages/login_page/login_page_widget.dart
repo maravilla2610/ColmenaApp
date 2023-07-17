@@ -351,6 +351,27 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                                           return;
                                         }
 
+                                        logFirebaseEvent('Button_auth');
+                                        if (_model.emailAddressController.text
+                                            .isEmpty) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Email required!',
+                                              ),
+                                            ),
+                                          );
+                                          return;
+                                        }
+
+                                        await authManager.updateEmail(
+                                          email: _model
+                                              .emailAddressController.text,
+                                          context: context,
+                                        );
+                                        setState(() {});
+
                                         logFirebaseEvent('Button_navigate_to');
 
                                         context.pushNamedAuth(

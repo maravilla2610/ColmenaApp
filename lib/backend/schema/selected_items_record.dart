@@ -46,11 +46,6 @@ class SelectedItemsRecord extends FirestoreRecord {
   double get subTotal => _subTotal ?? 0.0;
   bool hasSubTotal() => _subTotal != null;
 
-  // "cart" field.
-  DocumentReference? _cart;
-  DocumentReference? get cart => _cart;
-  bool hasCart() => _cart != null;
-
   // "creator" field.
   DocumentReference? _creator;
   DocumentReference? get creator => _creator;
@@ -68,7 +63,6 @@ class SelectedItemsRecord extends FirestoreRecord {
     _image = snapshotData['image'] as String?;
     _price = castToType<double>(snapshotData['price']);
     _subTotal = castToType<double>(snapshotData['subTotal']);
-    _cart = snapshotData['cart'] as DocumentReference?;
     _creator = snapshotData['creator'] as DocumentReference?;
     _quantity = castToType<int>(snapshotData['quantity']);
   }
@@ -114,7 +108,6 @@ Map<String, dynamic> createSelectedItemsRecordData({
   String? image,
   double? price,
   double? subTotal,
-  DocumentReference? cart,
   DocumentReference? creator,
   int? quantity,
 }) {
@@ -126,7 +119,6 @@ Map<String, dynamic> createSelectedItemsRecordData({
       'image': image,
       'price': price,
       'subTotal': subTotal,
-      'cart': cart,
       'creator': creator,
       'quantity': quantity,
     }.withoutNulls,
@@ -147,7 +139,6 @@ class SelectedItemsRecordDocumentEquality
         e1?.image == e2?.image &&
         e1?.price == e2?.price &&
         e1?.subTotal == e2?.subTotal &&
-        e1?.cart == e2?.cart &&
         e1?.creator == e2?.creator &&
         e1?.quantity == e2?.quantity;
   }
@@ -160,7 +151,6 @@ class SelectedItemsRecordDocumentEquality
         e?.image,
         e?.price,
         e?.subTotal,
-        e?.cart,
         e?.creator,
         e?.quantity
       ]);

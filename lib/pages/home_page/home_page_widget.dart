@@ -369,8 +369,8 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                   'Bebidas',
                                                   queryParameters: {
                                                     'products': serializeParam(
-                                                      rowProductosRecord!
-                                                          .reference,
+                                                      rowProductosRecord
+                                                          ?.reference,
                                                       ParamType
                                                           .DocumentReference,
                                                     ),
@@ -423,8 +423,8 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                   'Despensa',
                                                   queryParameters: {
                                                     'products': serializeParam(
-                                                      rowProductosRecord!
-                                                          .reference,
+                                                      rowProductosRecord
+                                                          ?.reference,
                                                       ParamType
                                                           .DocumentReference,
                                                     ),
@@ -477,8 +477,8 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                   'CuidadoPersonal',
                                                   queryParameters: {
                                                     'products': serializeParam(
-                                                      rowProductosRecord!
-                                                          .reference,
+                                                      rowProductosRecord
+                                                          ?.reference,
                                                       ParamType
                                                           .DocumentReference,
                                                     ),
@@ -532,8 +532,8 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                   'Aseo',
                                                   queryParameters: {
                                                     'products': serializeParam(
-                                                      rowProductosRecord!
-                                                          .reference,
+                                                      rowProductosRecord
+                                                          ?.reference,
                                                       ParamType
                                                           .DocumentReference,
                                                     ),
@@ -580,70 +580,9 @@ class _HomePageWidgetState extends State<HomePageWidget>
                               0.0, 15.0, 0.0, 0.0),
                           child: PagedListView<DocumentSnapshot<Object?>?,
                               ProductosRecord>(
-                            pagingController: () {
-                              final Query<Object?> Function(Query<Object?>)
-                                  queryBuilder =
-                                  (productosRecord) => productosRecord;
-                              if (_model.pagingController != null) {
-                                final query =
-                                    queryBuilder(ProductosRecord.collection);
-                                if (query != _model.pagingQuery) {
-                                  // The query has changed
-                                  _model.pagingQuery = query;
-                                  _model.streamSubscriptions
-                                      .forEach((s) => s?.cancel());
-                                  _model.streamSubscriptions.clear();
-                                  _model.pagingController!.refresh();
-                                }
-                                return _model.pagingController!;
-                              }
-
-                              _model.pagingController =
-                                  PagingController(firstPageKey: null);
-                              _model.pagingQuery =
-                                  queryBuilder(ProductosRecord.collection);
-                              _model.pagingController!
-                                  .addPageRequestListener((nextPageMarker) {
-                                queryProductosRecordPage(
-                                  queryBuilder: (productosRecord) =>
-                                      productosRecord,
-                                  nextPageMarker: nextPageMarker,
-                                  pageSize: 25,
-                                  isStream: true,
-                                ).then((page) {
-                                  _model.pagingController!.appendPage(
-                                    page.data,
-                                    page.nextPageMarker,
-                                  );
-                                  final streamSubscription =
-                                      page.dataStream?.listen((data) {
-                                    data.forEach((item) {
-                                      final itemIndexes = _model
-                                          .pagingController!.itemList!
-                                          .asMap()
-                                          .map((k, v) =>
-                                              MapEntry(v.reference.id, k));
-                                      final index =
-                                          itemIndexes[item.reference.id];
-                                      final items =
-                                          _model.pagingController!.itemList!;
-                                      if (index != null) {
-                                        items.replaceRange(
-                                            index, index + 1, [item]);
-                                        _model.pagingController!.itemList = {
-                                          for (var item in items)
-                                            item.reference: item
-                                        }.values.toList();
-                                      }
-                                    });
-                                    setState(() {});
-                                  });
-                                  _model.streamSubscriptions
-                                      .add(streamSubscription);
-                                });
-                              });
-                              return _model.pagingController!;
-                            }(),
+                            pagingController: _model.setListViewController(
+                              ProductosRecord.collection,
+                            ),
                             padding: EdgeInsets.zero,
                             primary: false,
                             shrinkWrap: true,
@@ -662,10 +601,22 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                   ),
                                 ),
                               ),
+                              // Customize what your widget looks like when it's loading another page.
+                              newPageProgressIndicatorBuilder: (_) => Center(
+                                child: SizedBox(
+                                  width: 50.0,
+                                  height: 50.0,
+                                  child: SpinKitPulse(
+                                    color: FlutterFlowTheme.of(context).primary,
+                                    size: 50.0,
+                                  ),
+                                ),
+                              ),
 
                               itemBuilder: (context, _, listViewIndex) {
                                 final listViewProductosRecord = _model
-                                    .pagingController!.itemList![listViewIndex];
+                                    .listViewPagingController!
+                                    .itemList![listViewIndex];
                                 return StreamBuilder<List<ProductosRecord>>(
                                   stream: queryProductosRecord(),
                                   builder: (context, snapshot) {
@@ -710,18 +661,10 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                           },
                                         );
                                       },
-                                      child: wrapWithModel(
-                                        model: _model.productModels.getModel(
-                                          listViewProductosRecord.reference.id,
-                                          listViewIndex,
-                                        ),
-                                        updateCallback: () => setState(() {}),
-                                        child: ProductWidget(
-                                          key: Key(
-                                            'Keyjiv_${listViewProductosRecord.reference.id}',
-                                          ),
-                                          products: homePageProductosRecordList,
-                                        ),
+                                      child: ProductWidget(
+                                        key: Key(
+                                            'Keyjiv_${listViewIndex}_of_${_model.listViewPagingController!.itemList!.length}'),
+                                        products: productProductosRecordList,
                                       ),
                                     );
                                   },
