@@ -617,57 +617,35 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                 final listViewProductosRecord = _model
                                     .listViewPagingController!
                                     .itemList![listViewIndex];
-                                return StreamBuilder<List<ProductosRecord>>(
-                                  stream: queryProductosRecord(),
-                                  builder: (context, snapshot) {
-                                    // Customize what your widget looks like when it's loading.
-                                    if (!snapshot.hasData) {
-                                      return Center(
-                                        child: SizedBox(
-                                          width: 50.0,
-                                          height: 50.0,
-                                          child: SpinKitPulse(
-                                            color: FlutterFlowTheme.of(context)
-                                                .primary,
-                                            size: 50.0,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                    List<ProductosRecord>
-                                        productProductosRecordList =
-                                        snapshot.data!;
-                                    return InkWell(
-                                      splashColor: Colors.transparent,
-                                      focusColor: Colors.transparent,
-                                      hoverColor: Colors.transparent,
-                                      highlightColor: Colors.transparent,
-                                      onTap: () async {
-                                        logFirebaseEvent(
-                                            'HOME_PAGE_PAGE_Container_jivysx22_ON_TAP');
-                                        logFirebaseEvent('product_navigate_to');
+                                return InkWell(
+                                  splashColor: Colors.transparent,
+                                  focusColor: Colors.transparent,
+                                  hoverColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
+                                  onTap: () async {
+                                    logFirebaseEvent(
+                                        'HOME_PAGE_PAGE_Container_jivysx22_ON_TAP');
+                                    logFirebaseEvent('product_navigate_to');
 
-                                        context.pushNamed(
-                                          'ItemDetail',
-                                          queryParameters: {
-                                            'itemParameter': serializeParam(
-                                              listViewProductosRecord,
-                                              ParamType.Document,
-                                            ),
-                                          }.withoutNulls,
-                                          extra: <String, dynamic>{
-                                            'itemParameter':
-                                                listViewProductosRecord,
-                                          },
-                                        );
+                                    context.pushNamed(
+                                      'ItemDetail',
+                                      queryParameters: {
+                                        'itemParameter': serializeParam(
+                                          listViewProductosRecord,
+                                          ParamType.Document,
+                                        ),
+                                      }.withoutNulls,
+                                      extra: <String, dynamic>{
+                                        'itemParameter':
+                                            listViewProductosRecord,
                                       },
-                                      child: ProductWidget(
-                                        key: Key(
-                                            'Keyjiv_${listViewIndex}_of_${_model.listViewPagingController!.itemList!.length}'),
-                                        products: productProductosRecordList,
-                                      ),
                                     );
                                   },
+                                  child: ProductWidget(
+                                    key: Key(
+                                        'Keyjiv_${listViewIndex}_of_${_model.listViewPagingController!.itemList!.length}'),
+                                    products: homePageProductosRecordList,
+                                  ),
                                 );
                               },
                             ),
