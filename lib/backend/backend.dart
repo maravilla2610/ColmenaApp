@@ -8,7 +8,6 @@ import 'schema/util/firestore_util.dart';
 import 'schema/usuarios_record.dart';
 import 'schema/transacciones_record.dart';
 import 'schema/productos_record.dart';
-import 'schema/category_record.dart';
 import 'schema/cart_record.dart';
 import 'schema/selected_items_record.dart';
 import 'schema/order_record.dart';
@@ -22,7 +21,6 @@ export 'schema/util/schema_util.dart';
 export 'schema/usuarios_record.dart';
 export 'schema/transacciones_record.dart';
 export 'schema/productos_record.dart';
-export 'schema/category_record.dart';
 export 'schema/cart_record.dart';
 export 'schema/selected_items_record.dart';
 export 'schema/order_record.dart';
@@ -133,43 +131,6 @@ Future<List<ProductosRecord>> queryProductosRecordOnce({
     queryCollectionOnce(
       ProductosRecord.collection,
       ProductosRecord.fromSnapshot,
-      queryBuilder: queryBuilder,
-      limit: limit,
-      singleRecord: singleRecord,
-    );
-
-/// Functions to query CategoryRecords (as a Stream and as a Future).
-Future<int> queryCategoryRecordCount({
-  Query Function(Query)? queryBuilder,
-  int limit = -1,
-}) =>
-    queryCollectionCount(
-      CategoryRecord.collection,
-      queryBuilder: queryBuilder,
-      limit: limit,
-    );
-
-Stream<List<CategoryRecord>> queryCategoryRecord({
-  Query Function(Query)? queryBuilder,
-  int limit = -1,
-  bool singleRecord = false,
-}) =>
-    queryCollection(
-      CategoryRecord.collection,
-      CategoryRecord.fromSnapshot,
-      queryBuilder: queryBuilder,
-      limit: limit,
-      singleRecord: singleRecord,
-    );
-
-Future<List<CategoryRecord>> queryCategoryRecordOnce({
-  Query Function(Query)? queryBuilder,
-  int limit = -1,
-  bool singleRecord = false,
-}) =>
-    queryCollectionOnce(
-      CategoryRecord.collection,
-      CategoryRecord.fromSnapshot,
       queryBuilder: queryBuilder,
       limit: limit,
       singleRecord: singleRecord,

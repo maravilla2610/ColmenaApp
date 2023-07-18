@@ -633,7 +633,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                     child: ProductWidget(
                                       key: Key(
                                           'Keyjiv_${listViewIndex}_of_${listViewProductosRecordList.length}'),
-                                      products: homePageProductosRecordList,
                                     ),
                                   );
                                 },

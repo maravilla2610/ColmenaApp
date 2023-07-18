@@ -248,7 +248,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
 
                                         logFirebaseEvent('badge_backend_call');
 
-                                        await badgeUsuariosRecord!.reference
+                                        await currentUserReference!
                                             .update(createUsuariosRecordData(
                                           photoUrl: _model.uploadedFileUrl,
                                         ));
