@@ -79,8 +79,8 @@ class _ProgressBarWidgetState extends State<ProgressBarWidget> {
                     : null;
             return LinearPercentIndicator(
               percent: functions.progressBar(
-                  progressBarProductosRecord!.supply.toDouble(),
-                  progressBarProductosRecord!.demand.toDouble())!,
+                  progressBarProductosRecord?.supply?.toDouble(),
+                  progressBarProductosRecord?.demand?.toDouble())!,
               lineHeight: 20.0,
               animation: true,
               progressColor: FlutterFlowTheme.of(context).tertiary,

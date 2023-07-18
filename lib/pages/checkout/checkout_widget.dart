@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
 import '/backend/stripe/payment_manager.dart';
 import '/components/countercart_widget.dart';
@@ -33,7 +34,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     super.initState();
     _model = createModel(context, () => CheckoutModel());
 
-    logFirebaseEvent('screen_view', parameters: {'screen_name': 'checkout'});
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
@@ -169,9 +169,10 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                         0.0, 0.0, 0.0, 12.0),
                                     child: Builder(
                                       builder: (context) {
-                                        final cartItems = checkoutCartRecord!
-                                            .selectedItemsLst
-                                            .toList();
+                                        final cartItems = checkoutCartRecord
+                                                ?.selectedItemsLst
+                                                ?.toList() ??
+                                            [];
                                         return ListView.builder(
                                           padding: EdgeInsets.zero,
                                           shrinkWrap: true,
@@ -186,9 +187,11 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                                   .fromSTEB(
                                                       0.0, 4.0, 0.0, 12.0),
                                               child: StreamBuilder<
-                                                  SelectedItemsRecord>(
-                                                stream: SelectedItemsRecord
-                                                    .getDocument(cartItemsItem),
+                                                  List<SelectedItemsRecord>>(
+                                                stream:
+                                                    querySelectedItemsRecord(
+                                                  singleRecord: true,
+                                                ),
                                                 builder: (context, snapshot) {
                                                   // Customize what your widget looks like when it's loading.
                                                   if (!snapshot.hasData) {
@@ -205,8 +208,15 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                                       ),
                                                     );
                                                   }
-                                                  final rowSelectedItemsRecord =
+                                                  List<SelectedItemsRecord>
+                                                      rowSelectedItemsRecordList =
                                                       snapshot.data!;
+                                                  final rowSelectedItemsRecord =
+                                                      rowSelectedItemsRecordList
+                                                              .isNotEmpty
+                                                          ? rowSelectedItemsRecordList
+                                                              .first
+                                                          : null;
                                                   return Row(
                                                     mainAxisSize:
                                                         MainAxisSize.max,
@@ -225,7 +235,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                                                   .circular(
                                                                       12.0),
                                                           child: Image.network(
-                                                            rowSelectedItemsRecord
+                                                            rowSelectedItemsRecord!
                                                                 .image,
                                                             width: 70.0,
                                                             height: 70.0,
@@ -255,7 +265,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                                                     .stretch,
                                                             children: [
                                                               Text(
-                                                                rowSelectedItemsRecord
+                                                                rowSelectedItemsRecord!
                                                                     .name,
                                                                 style: FlutterFlowTheme.of(
                                                                         context)
@@ -314,7 +324,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                                                         model: _model
                                                                             .countercartModels
                                                                             .getModel(
-                                                                          rowSelectedItemsRecord
+                                                                          rowSelectedItemsRecord!
                                                                               .quantity
                                                                               .toString(),
                                                                           cartItemsIndex,
@@ -328,7 +338,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                                                             CountercartWidget(
                                                                           key:
                                                                               Key(
-                                                                            'Keylmz_${rowSelectedItemsRecord.quantity.toString()}',
+                                                                            'Keylmz_${rowSelectedItemsRecord!.quantity.toString()}',
                                                                           ),
                                                                         ),
                                                                       );
@@ -350,7 +360,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                                                     0.0),
                                                         child: AutoSizeText(
                                                           formatNumber(
-                                                            rowSelectedItemsRecord
+                                                            rowSelectedItemsRecord!
                                                                 .subTotal,
                                                             formatType:
                                                                 FormatType
@@ -419,26 +429,26 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                                                     FieldValue
                                                                         .arrayRemove([
                                                                   rowSelectedItemsRecord
-                                                                      .reference
+                                                                      ?.reference
                                                                 ]),
                                                                 'itemCount': FieldValue
                                                                     .increment(
-                                                                        -(rowSelectedItemsRecord
+                                                                        -(rowSelectedItemsRecord!
                                                                             .quantity)),
                                                                 'amount': FieldValue
                                                                     .increment(
-                                                                        -(rowSelectedItemsRecord
+                                                                        -(rowSelectedItemsRecord!
                                                                             .subTotal)),
                                                               });
                                                               logFirebaseEvent(
                                                                   'Button_backend_call');
-                                                              await rowSelectedItemsRecord
+                                                              await rowSelectedItemsRecord!
                                                                   .reference
                                                                   .delete();
                                                             }
-                                                            if (checkoutCartRecord!
-                                                                    .selectedItemsLst
-                                                                    .length ==
+                                                            if (checkoutCartRecord
+                                                                    ?.selectedItemsLst
+                                                                    ?.length ==
                                                                 0) {
                                                               logFirebaseEvent(
                                                                   'Button_navigate_to');
@@ -756,8 +766,8 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                                     Text(
                                                       functions
                                                           .percentage(
-                                                              checkoutCartRecord!
-                                                                  .amount)
+                                                              checkoutCartRecord
+                                                                  ?.amount)
                                                           .toString(),
                                                       textAlign: TextAlign.end,
                                                       style:
@@ -918,13 +928,13 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                         30.0),
                                     status: 'En espera',
                                     tax: functions
-                                        .percentage(checkoutCartRecord!.amount),
+                                        .percentage(checkoutCartRecord?.amount),
                                     createdAt: getCurrentTimestamp,
                                     creator: currentUserReference,
-                                    cart: buttonCartRecord!.reference,
+                                    cart: buttonCartRecord?.reference,
                                   ),
                                   'itemsList':
-                                      buttonCartRecord!.selectedItemsLst,
+                                      buttonCartRecord?.selectedItemsLst,
                                 });
                                 _model.orden = OrderRecord.getDocumentFromData({
                                   ...createOrderRecordData(
@@ -935,22 +945,37 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                         30.0),
                                     status: 'En espera',
                                     tax: functions
-                                        .percentage(checkoutCartRecord!.amount),
+                                        .percentage(checkoutCartRecord?.amount),
                                     createdAt: getCurrentTimestamp,
                                     creator: currentUserReference,
-                                    cart: buttonCartRecord!.reference,
+                                    cart: buttonCartRecord?.reference,
                                   ),
                                   'itemsList':
-                                      buttonCartRecord!.selectedItemsLst,
+                                      buttonCartRecord?.selectedItemsLst,
                                 }, orderRecordReference);
+                                logFirebaseEvent('Button_backend_call');
+
+                                await buttonCartRecord!.reference
+                                    .update(createCartRecordData(
+                                  isActive: false,
+                                ));
+                                logFirebaseEvent('Button_backend_call');
+
+                                await currentUserReference!.update({
+                                  'orderLst': FieldValue.arrayUnion(
+                                      [_model.orden?.reference]),
+                                });
                                 logFirebaseEvent('Button_stripe_payment');
                                 final paymentResponse =
                                     await processStripePayment(
                                   context,
                                   amount: functions
-                                      .cartConversion(buttonCartRecord!.amount)!
+                                      .cartConversion(functions.cartTotal(
+                                          checkoutCartRecord!.amount,
+                                          checkoutCartRecord!.amount,
+                                          30.0))!
                                       .round(),
-                                  currency: 'MX',
+                                  currency: 'MXN',
                                   customerEmail: valueOrDefault(
                                       currentUserDocument?.mail, ''),
                                   customerName: valueOrDefault(
@@ -972,6 +997,12 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                   return;
                                 }
                                 _model.paymentId = paymentResponse.paymentId!;
+
+                                logFirebaseEvent('Button_backend_call');
+                                _model.apiResult0bd = await WhatsAppCall.call(
+                                  phoneNumber: currentPhoneNumber,
+                                  message: 'Tu pedido esta en camino :)',
+                                );
 
                                 setState(() {});
                               },

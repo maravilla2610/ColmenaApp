@@ -121,6 +121,11 @@ class UsuariosRecord extends FirestoreRecord {
   bool get firstLogin => _firstLogin ?? false;
   bool hasFirstLogin() => _firstLogin != null;
 
+  // "orderLst" field.
+  List<DocumentReference>? _orderLst;
+  List<DocumentReference> get orderLst => _orderLst ?? const [];
+  bool hasOrderLst() => _orderLst != null;
+
   void _initializeFields() {
     _bdate = snapshotData['bdate'] as String?;
     _lastName = snapshotData['last_name'] as String?;
@@ -143,6 +148,7 @@ class UsuariosRecord extends FirestoreRecord {
     _createdTime = snapshotData['created_time'] as DateTime?;
     _phoneNumber = snapshotData['phone_number'] as String?;
     _firstLogin = snapshotData['firstLogin'] as bool?;
+    _orderLst = getDataList(snapshotData['orderLst']);
   }
 
   static CollectionReference get collection =>
@@ -236,6 +242,7 @@ class UsuariosRecordDocumentEquality implements Equality<UsuariosRecord> {
 
   @override
   bool equals(UsuariosRecord? e1, UsuariosRecord? e2) {
+    const listEquality = ListEquality();
     return e1?.bdate == e2?.bdate &&
         e1?.lastName == e2?.lastName &&
         e1?.mail == e2?.mail &&
@@ -256,7 +263,8 @@ class UsuariosRecordDocumentEquality implements Equality<UsuariosRecord> {
         e1?.uid == e2?.uid &&
         e1?.createdTime == e2?.createdTime &&
         e1?.phoneNumber == e2?.phoneNumber &&
-        e1?.firstLogin == e2?.firstLogin;
+        e1?.firstLogin == e2?.firstLogin &&
+        listEquality.equals(e1?.orderLst, e2?.orderLst);
   }
 
   @override
@@ -281,7 +289,8 @@ class UsuariosRecordDocumentEquality implements Equality<UsuariosRecord> {
         e?.uid,
         e?.createdTime,
         e?.phoneNumber,
-        e?.firstLogin
+        e?.firstLogin,
+        e?.orderLst
       ]);
 
   @override

@@ -90,6 +90,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'HomePage',
           path: '/homePage',
+          requireAuth: true,
           builder: (context, params) => params.isEmpty
               ? NavBarPage(initialPage: 'HomePage')
               : NavBarPage(
@@ -100,6 +101,7 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: 'checkout',
           path: '/checkout',
+          requireAuth: true,
           builder: (context, params) => CheckoutWidget(),
         ),
         FFRoute(

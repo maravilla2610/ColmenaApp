@@ -1,3 +1,4 @@
+import '/auth/base_auth_user_provider.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/app_bar_widget.dart';
@@ -6,9 +7,7 @@ import '/components/product_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -33,19 +32,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   final animationsMap = {
-    'textOnPageLoadAnimation1': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        ScaleEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(1.0, 1.0),
-          end: Offset(1.0, 1.0),
-        ),
-      ],
-    ),
-    'textOnPageLoadAnimation2': AnimationInfo(
+    'textOnPageLoadAnimation': AnimationInfo(
       trigger: AnimationTrigger.onPageLoad,
       effects: [
         FadeEffect(
@@ -63,18 +50,6 @@ class _HomePageWidgetState extends State<HomePageWidget>
   void initState() {
     super.initState();
     _model = createModel(context, () => HomePageModel());
-
-    logFirebaseEvent('screen_view', parameters: {'screen_name': 'HomePage'});
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      logFirebaseEvent('HOME_PAGE_PAGE_HomePage_ON_INIT_STATE');
-      logFirebaseEvent('HomePage_firestore_query');
-      _model.load = await queryUsuariosRecordOnce(
-        queryBuilder: (usuariosRecord) =>
-            usuariosRecord.where('name', isEqualTo: currentUserReference?.id),
-        singleRecord: true,
-      ).then((s) => s.firstOrNull);
-    });
 
     _model.textController ??= TextEditingController();
 
@@ -160,61 +135,63 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                       style: FlutterFlowTheme.of(context)
                                           .headlineLarge,
                                     ),
-                                    Align(
-                                      alignment: AlignmentDirectional(0.0, 0.0),
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            5.0, 0.0, 0.0, 0.0),
-                                        child: AuthUserStreamWidget(
-                                          builder: (context) => StreamBuilder<
-                                              List<UsuariosRecord>>(
-                                            stream: queryUsuariosRecord(
-                                              singleRecord: true,
-                                            ),
-                                            builder: (context, snapshot) {
-                                              // Customize what your widget looks like when it's loading.
-                                              if (!snapshot.hasData) {
-                                                return Center(
-                                                  child: SizedBox(
-                                                    width: 50.0,
-                                                    height: 50.0,
-                                                    child: SpinKitPulse(
-                                                      color:
-                                                          FlutterFlowTheme.of(
-                                                                  context)
-                                                              .primary,
-                                                      size: 50.0,
+                                    if (loggedIn == true)
+                                      Align(
+                                        alignment:
+                                            AlignmentDirectional(0.0, 0.0),
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsetsDirectional.fromSTEB(
+                                                  5.0, 0.0, 0.0, 0.0),
+                                          child: AuthUserStreamWidget(
+                                            builder: (context) => StreamBuilder<
+                                                List<UsuariosRecord>>(
+                                              stream: queryUsuariosRecord(
+                                                singleRecord: true,
+                                              ),
+                                              builder: (context, snapshot) {
+                                                // Customize what your widget looks like when it's loading.
+                                                if (!snapshot.hasData) {
+                                                  return Center(
+                                                    child: SizedBox(
+                                                      width: 50.0,
+                                                      height: 50.0,
+                                                      child: SpinKitPulse(
+                                                        color:
+                                                            FlutterFlowTheme.of(
+                                                                    context)
+                                                                .primary,
+                                                        size: 50.0,
+                                                      ),
                                                     ),
-                                                  ),
+                                                  );
+                                                }
+                                                List<UsuariosRecord>
+                                                    textUsuariosRecordList =
+                                                    snapshot.data!;
+                                                // Return an empty Container when the item does not exist.
+                                                if (snapshot.data!.isEmpty) {
+                                                  return Container();
+                                                }
+                                                final textUsuariosRecord =
+                                                    textUsuariosRecordList
+                                                            .isNotEmpty
+                                                        ? textUsuariosRecordList
+                                                            .first
+                                                        : null;
+                                                return Text(
+                                                  valueOrDefault(
+                                                      currentUserDocument?.name,
+                                                      ''),
+                                                  style: FlutterFlowTheme.of(
+                                                          context)
+                                                      .headlineLarge,
                                                 );
-                                              }
-                                              List<UsuariosRecord>
-                                                  textUsuariosRecordList =
-                                                  snapshot.data!;
-                                              // Return an empty Container when the item does not exist.
-                                              if (snapshot.data!.isEmpty) {
-                                                return Container();
-                                              }
-                                              final textUsuariosRecord =
-                                                  textUsuariosRecordList
-                                                          .isNotEmpty
-                                                      ? textUsuariosRecordList
-                                                          .first
-                                                      : null;
-                                              return AutoSizeText(
-                                                valueOrDefault(
-                                                    currentUserDocument?.name,
-                                                    ''),
-                                                style:
-                                                    FlutterFlowTheme.of(context)
-                                                        .headlineLarge,
-                                              ).animateOnPageLoad(animationsMap[
-                                                  'textOnPageLoadAnimation1']!);
-                                            },
+                                              },
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -222,7 +199,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                 'Tus necesidades a precio justo',
                                 style: FlutterFlowTheme.of(context).bodyLarge,
                               ).animateOnPageLoad(
-                                  animationsMap['textOnPageLoadAnimation2']!),
+                                  animationsMap['textOnPageLoadAnimation']!),
                             ],
                           ),
                         ),
@@ -391,8 +368,8 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                   'Bebidas',
                                                   queryParameters: {
                                                     'products': serializeParam(
-                                                      rowProductosRecord!
-                                                          .reference,
+                                                      rowProductosRecord
+                                                          ?.reference,
                                                       ParamType
                                                           .DocumentReference,
                                                     ),
@@ -445,8 +422,8 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                   'Despensa',
                                                   queryParameters: {
                                                     'products': serializeParam(
-                                                      rowProductosRecord!
-                                                          .reference,
+                                                      rowProductosRecord
+                                                          ?.reference,
                                                       ParamType
                                                           .DocumentReference,
                                                     ),
@@ -499,8 +476,8 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                   'CuidadoPersonal',
                                                   queryParameters: {
                                                     'products': serializeParam(
-                                                      rowProductosRecord!
-                                                          .reference,
+                                                      rowProductosRecord
+                                                          ?.reference,
                                                       ParamType
                                                           .DocumentReference,
                                                     ),
@@ -554,8 +531,8 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                                   'Aseo',
                                                   queryParameters: {
                                                     'products': serializeParam(
-                                                      rowProductosRecord!
-                                                          .reference,
+                                                      rowProductosRecord
+                                                          ?.reference,
                                                       ParamType
                                                           .DocumentReference,
                                                     ),
@@ -601,11 +578,7 @@ class _HomePageWidgetState extends State<HomePageWidget>
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 15.0, 0.0, 0.0),
                           child: StreamBuilder<List<ProductosRecord>>(
-                            stream: _model.home(
-                              requestFn: () => queryProductosRecord(
-                                limit: 30,
-                              ),
-                            ),
+                            stream: queryProductosRecord(),
                             builder: (context, snapshot) {
                               // Customize what your widget looks like when it's loading.
                               if (!snapshot.hasData) {
@@ -633,70 +606,35 @@ class _HomePageWidgetState extends State<HomePageWidget>
                                   final listViewProductosRecord =
                                       listViewProductosRecordList[
                                           listViewIndex];
-                                  return StreamBuilder<List<ProductosRecord>>(
-                                    stream: queryProductosRecord(),
-                                    builder: (context, snapshot) {
-                                      // Customize what your widget looks like when it's loading.
-                                      if (!snapshot.hasData) {
-                                        return Center(
-                                          child: SizedBox(
-                                            width: 50.0,
-                                            height: 50.0,
-                                            child: SpinKitPulse(
-                                              color:
-                                                  FlutterFlowTheme.of(context)
-                                                      .primary,
-                                              size: 50.0,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                      List<ProductosRecord>
-                                          productProductosRecordList =
-                                          snapshot.data!;
-                                      return InkWell(
-                                        splashColor: Colors.transparent,
-                                        focusColor: Colors.transparent,
-                                        hoverColor: Colors.transparent,
-                                        highlightColor: Colors.transparent,
-                                        onTap: () async {
-                                          logFirebaseEvent(
-                                              'HOME_PAGE_PAGE_Container_jivysx22_ON_TAP');
-                                          logFirebaseEvent(
-                                              'product_navigate_to');
+                                  return InkWell(
+                                    splashColor: Colors.transparent,
+                                    focusColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () async {
+                                      logFirebaseEvent(
+                                          'HOME_PAGE_PAGE_Container_jivysx22_ON_TAP');
+                                      logFirebaseEvent('product_navigate_to');
 
-                                          context.pushNamed(
-                                            'ItemDetail',
-                                            queryParameters: {
-                                              'itemParameter': serializeParam(
-                                                listViewProductosRecord,
-                                                ParamType.Document,
-                                              ),
-                                            }.withoutNulls,
-                                            extra: <String, dynamic>{
-                                              'itemParameter':
-                                                  listViewProductosRecord,
-                                            },
-                                          );
+                                      context.pushNamed(
+                                        'ItemDetail',
+                                        queryParameters: {
+                                          'itemParameter': serializeParam(
+                                            listViewProductosRecord,
+                                            ParamType.Document,
+                                          ),
+                                        }.withoutNulls,
+                                        extra: <String, dynamic>{
+                                          'itemParameter':
+                                              listViewProductosRecord,
                                         },
-                                        child: wrapWithModel(
-                                          model: _model.productModels.getModel(
-                                            listViewProductosRecord
-                                                .reference.id,
-                                            listViewIndex,
-                                          ),
-                                          updateCallback: () => setState(() {}),
-                                          updateOnChange: true,
-                                          child: ProductWidget(
-                                            key: Key(
-                                              'Keyjiv_${listViewProductosRecord.reference.id}',
-                                            ),
-                                            products:
-                                                homePageProductosRecordList,
-                                          ),
-                                        ),
                                       );
                                     },
+                                    child: ProductWidget(
+                                      key: Key(
+                                          'Keyjiv_${listViewIndex}_of_${listViewProductosRecordList.length}'),
+                                      products: homePageProductosRecordList,
+                                    ),
                                   );
                                 },
                               );

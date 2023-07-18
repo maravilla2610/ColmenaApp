@@ -1,3 +1,4 @@
+import '/auth/base_auth_user_provider.dart';
 import '/auth/firebase_auth/auth_util.dart';
 import '/backend/backend.dart';
 import '/components/app_bar_widget.dart';
@@ -6,11 +7,7 @@ import '/components/product_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/request_manager.dart';
-
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -32,8 +29,6 @@ class HomePageModel extends FlutterFlowModel {
   ///  State fields for stateful widgets in this page.
 
   final unfocusNode = FocusNode();
-  // Stores action output result for [Firestore Query - Query a collection] action in HomePage widget.
-  UsuariosRecord? load;
   // Model for Dropdown07Account component.
   late Dropdown07AccountModel dropdown07AccountModel;
   // Model for appBar component.
@@ -41,25 +36,6 @@ class HomePageModel extends FlutterFlowModel {
   // State field(s) for TextField widget.
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
-  // Models for product dynamic component.
-  late FlutterFlowDynamicModels<ProductModel> productModels;
-
-  /// Query cache managers for this widget.
-
-  final _homeManager = StreamRequestManager<List<ProductosRecord>>();
-  Stream<List<ProductosRecord>> home({
-    String? uniqueQueryKey,
-    bool? overrideCache,
-    required Stream<List<ProductosRecord>> Function() requestFn,
-  }) =>
-      _homeManager.performRequest(
-        uniqueQueryKey: uniqueQueryKey,
-        overrideCache: overrideCache,
-        requestFn: requestFn,
-      );
-  void clearHomeCache() => _homeManager.clear();
-  void clearHomeCacheKey(String? uniqueKey) =>
-      _homeManager.clearRequest(uniqueKey);
 
   /// Initialization and disposal methods.
 
@@ -67,7 +43,6 @@ class HomePageModel extends FlutterFlowModel {
     dropdown07AccountModel =
         createModel(context, () => Dropdown07AccountModel());
     appBarModel = createModel(context, () => AppBarModel());
-    productModels = FlutterFlowDynamicModels(() => ProductModel());
   }
 
   void dispose() {
@@ -75,11 +50,6 @@ class HomePageModel extends FlutterFlowModel {
     dropdown07AccountModel.dispose();
     appBarModel.dispose();
     textController?.dispose();
-    productModels.dispose();
-
-    /// Dispose query cache managers for this widget.
-
-    clearHomeCache();
   }
 
   /// Action blocks are added here.

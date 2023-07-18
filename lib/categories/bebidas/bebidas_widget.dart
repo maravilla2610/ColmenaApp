@@ -131,7 +131,6 @@ class _BebidasWidgetState extends State<BebidasWidget>
     super.initState();
     _model = createModel(context, () => BebidasModel());
 
-    logFirebaseEvent('screen_view', parameters: {'screen_name': 'Bebidas'});
     setupAnimations(
       animationsMap.values.where((anim) =>
           anim.trigger == AnimationTrigger.onActionTrigger ||

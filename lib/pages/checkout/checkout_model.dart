@@ -1,4 +1,5 @@
 import '/auth/firebase_auth/auth_util.dart';
+import '/backend/api_requests/api_calls.dart';
 import '/backend/backend.dart';
 import '/backend/stripe/payment_manager.dart';
 import '/components/countercart_widget.dart';
@@ -27,6 +28,8 @@ class CheckoutModel extends FlutterFlowModel {
   OrderRecord? orden;
   // Stores action output result for [Stripe Payment] action in Button widget.
   String? paymentId;
+  // Stores action output result for [Backend Call - API (WhatsApp)] action in Button widget.
+  ApiCallResponse? apiResult0bd;
 
   /// Initialization and disposal methods.
 

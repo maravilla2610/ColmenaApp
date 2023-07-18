@@ -70,7 +70,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
     super.initState();
     _model = createModel(context, () => LoginPageModel());
 
-    logFirebaseEvent('screen_view', parameters: {'screen_name': 'loginPage'});
     _model.emailAddressController ??= TextEditingController();
     _model.passwordController ??= TextEditingController();
 
@@ -351,6 +350,27 @@ class _LoginPageWidgetState extends State<LoginPageWidget>
                                         if (user == null) {
                                           return;
                                         }
+
+                                        logFirebaseEvent('Button_auth');
+                                        if (_model.emailAddressController.text
+                                            .isEmpty) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Email required!',
+                                              ),
+                                            ),
+                                          );
+                                          return;
+                                        }
+
+                                        await authManager.updateEmail(
+                                          email: _model
+                                              .emailAddressController.text,
+                                          context: context,
+                                        );
+                                        setState(() {});
 
                                         logFirebaseEvent('Button_navigate_to');
 

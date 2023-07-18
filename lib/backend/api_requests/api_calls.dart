@@ -51,6 +51,35 @@ class JwtCall {
       );
 }
 
+class WhatsAppCall {
+  static Future<ApiCallResponse> call({
+    String? phoneNumber = '',
+    String? message = '',
+  }) {
+    final body = '''
+{
+  "phoneNumber": "${phoneNumber}",
+  "message": "${message}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'WhatsApp',
+      apiUrl:
+          'https://us-central1-colmena-d4b91.cloudfunctions.net/sendWhatsAppNotification',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      params: {},
+      body: body,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+    );
+  }
+}
+
 class ApiPagingParams {
   int nextPageNumber = 0;
   int numItems = 0;

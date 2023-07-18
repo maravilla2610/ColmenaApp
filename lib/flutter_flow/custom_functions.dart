@@ -93,37 +93,7 @@ DocumentReference? getCartById(String? amount) {
 double? cartConversion(double? amount) {
   // multiply the amount by 1000
   if (amount != null) {
-    return amount * 1000;
+    return amount * 100;
   }
   return null;
-}
-Future<void> sendMessage(String templateName, String phoneNumber, List vars, String fileUrl, String tag) async {
-  var token = 'your_token_here'; // replace it with actual method to get token if needed
-  
-  var headers = {'Content-Type': 'application/json'};
-  
-  var body = jsonEncode({
-    "templateName": templateName,
-    "components": [
-      {
-        "phone": phoneNumber,
-        "vars": vars,
-      }
-    ],
-    "token": token,
-    "fileURL": fileUrl,
-    //"tag": tag
-  });
-
-  var response = await http.post(
-    Uri.parse('https://restservices.iventas.com/sendMessage'),
-    headers: headers,
-    body: body,
-  );
-
-  if (response.statusCode == 200) {
-    print('Response body: ${response.body}');
-  } else {
-    throw Exception('Failed to send message, status ${response.statusCode}');
-  }
 }
