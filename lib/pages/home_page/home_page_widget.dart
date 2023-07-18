@@ -568,76 +568,112 @@ class _HomePageWidgetState extends State<HomePageWidget>
                         ),
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 30.0, 0.0, 0.0),
+                              0.0, 30.0, 0.0, 15.0),
                           child: Text(
                             '¡Compra en grupo ya!',
                             style: FlutterFlowTheme.of(context).headlineSmall,
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 15.0, 0.0, 0.0),
-                          child: StreamBuilder<List<ProductosRecord>>(
-                            stream: queryProductosRecord(),
-                            builder: (context, snapshot) {
-                              // Customize what your widget looks like when it's loading.
-                              if (!snapshot.hasData) {
-                                return Center(
-                                  child: SizedBox(
-                                    width: 50.0,
-                                    height: 50.0,
-                                    child: SpinKitPulse(
-                                      color:
-                                          FlutterFlowTheme.of(context).primary,
-                                      size: 50.0,
-                                    ),
-                                  ),
-                                );
-                              }
-                              List<ProductosRecord>
-                                  listViewProductosRecordList = snapshot.data!;
-                              return ListView.builder(
-                                padding: EdgeInsets.zero,
-                                primary: false,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.vertical,
-                                itemCount: listViewProductosRecordList.length,
-                                itemBuilder: (context, listViewIndex) {
-                                  final listViewProductosRecord =
-                                      listViewProductosRecordList[
-                                          listViewIndex];
-                                  return InkWell(
-                                    splashColor: Colors.transparent,
-                                    focusColor: Colors.transparent,
-                                    hoverColor: Colors.transparent,
-                                    highlightColor: Colors.transparent,
-                                    onTap: () async {
-                                      logFirebaseEvent(
-                                          'HOME_PAGE_PAGE_Container_jivysx22_ON_TAP');
-                                      logFirebaseEvent('product_navigate_to');
-
-                                      context.pushNamed(
-                                        'ItemDetail',
-                                        queryParameters: {
-                                          'itemParameter': serializeParam(
-                                            listViewProductosRecord,
-                                            ParamType.Document,
-                                          ),
-                                        }.withoutNulls,
-                                        extra: <String, dynamic>{
-                                          'itemParameter':
-                                              listViewProductosRecord,
-                                        },
-                                      );
-                                    },
-                                    child: ProductWidget(
-                                      key: Key(
-                                          'Keyjiv_${listViewIndex}_of_${listViewProductosRecordList.length}'),
+                        ClipRRect(
+                          child: Container(
+                            width: 400.0,
+                            height: 400.0,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context)
+                                  .primaryBackground,
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 4.0,
+                                  color: Color(0x33000000),
+                                  offset: Offset(0.0, 2.0),
+                                )
+                              ],
+                              shape: BoxShape.rectangle,
+                            ),
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: StreamBuilder<List<ProductosRecord>>(
+                              stream: queryProductosRecord(),
+                              builder: (context, snapshot) {
+                                // Customize what your widget looks like when it's loading.
+                                if (!snapshot.hasData) {
+                                  return Center(
+                                    child: SizedBox(
+                                      width: 50.0,
+                                      height: 50.0,
+                                      child: SpinKitPulse(
+                                        color: FlutterFlowTheme.of(context)
+                                            .primary,
+                                        size: 50.0,
+                                      ),
                                     ),
                                   );
-                                },
-                              );
-                            },
+                                }
+                                List<ProductosRecord>
+                                    listViewProductosRecordList =
+                                    snapshot.data!;
+                                return ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: listViewProductosRecordList.length,
+                                  itemBuilder: (context, listViewIndex) {
+                                    final listViewProductosRecord =
+                                        listViewProductosRecordList[
+                                            listViewIndex];
+                                    return InkWell(
+                                      splashColor: Colors.transparent,
+                                      focusColor: Colors.transparent,
+                                      hoverColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () async {
+                                        logFirebaseEvent(
+                                            'HOME_PAGE_PAGE_Container_xqhti5kx_ON_TAP');
+                                        logFirebaseEvent('product_navigate_to');
+
+                                        context.pushNamed(
+                                          'ItemDetail',
+                                          queryParameters: {
+                                            'itemParameter': serializeParam(
+                                              listViewProductosRecord,
+                                              ParamType.Document,
+                                            ),
+                                          }.withoutNulls,
+                                          extra: <String, dynamic>{
+                                            'itemParameter':
+                                                listViewProductosRecord,
+                                          },
+                                        );
+                                      },
+                                      child: wrapWithModel(
+                                        model: _model.productModels.getModel(
+                                          listViewProductosRecord.productName,
+                                          listViewIndex,
+                                        ),
+                                        updateCallback: () => setState(() {}),
+                                        child: ProductWidget(
+                                          key: Key(
+                                            'Keyxqh_${listViewProductosRecord.productName}',
+                                          ),
+                                          productName: listViewProductosRecord
+                                              .productName,
+                                          costo1:
+                                              listViewProductosRecord.costo1,
+                                          productCategory:
+                                              listViewProductosRecord
+                                                  .productCategory,
+                                          productImage:
+                                              listViewProductosRecord.imageURL,
+                                          description: listViewProductosRecord
+                                              .productDescription,
+                                          docRef:
+                                              listViewProductosRecord.reference,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ],

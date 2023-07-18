@@ -264,12 +264,59 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                                                                 CrossAxisAlignment
                                                                     .stretch,
                                                             children: [
-                                                              Text(
-                                                                rowSelectedItemsRecord!
-                                                                    .name,
-                                                                style: FlutterFlowTheme.of(
-                                                                        context)
-                                                                    .bodyLarge,
+                                                              StreamBuilder<
+                                                                  List<
+                                                                      SelectedItemsRecord>>(
+                                                                stream:
+                                                                    querySelectedItemsRecord(
+                                                                  singleRecord:
+                                                                      true,
+                                                                ),
+                                                                builder: (context,
+                                                                    snapshot) {
+                                                                  // Customize what your widget looks like when it's loading.
+                                                                  if (!snapshot
+                                                                      .hasData) {
+                                                                    return Center(
+                                                                      child:
+                                                                          SizedBox(
+                                                                        width:
+                                                                            50.0,
+                                                                        height:
+                                                                            50.0,
+                                                                        child:
+                                                                            SpinKitPulse(
+                                                                          color:
+                                                                              FlutterFlowTheme.of(context).primary,
+                                                                          size:
+                                                                              50.0,
+                                                                        ),
+                                                                      ),
+                                                                    );
+                                                                  }
+                                                                  List<SelectedItemsRecord>
+                                                                      textSelectedItemsRecordList =
+                                                                      snapshot
+                                                                          .data!;
+                                                                  // Return an empty Container when the item does not exist.
+                                                                  if (snapshot
+                                                                      .data!
+                                                                      .isEmpty) {
+                                                                    return Container();
+                                                                  }
+                                                                  final textSelectedItemsRecord = textSelectedItemsRecordList
+                                                                          .isNotEmpty
+                                                                      ? textSelectedItemsRecordList
+                                                                          .first
+                                                                      : null;
+                                                                  return Text(
+                                                                    rowSelectedItemsRecord!
+                                                                        .name,
+                                                                    style: FlutterFlowTheme.of(
+                                                                            context)
+                                                                        .bodyLarge,
+                                                                  );
+                                                                },
                                                               ),
                                                               Row(
                                                                 mainAxisSize:

@@ -64,6 +64,31 @@ class FFAppState extends ChangeNotifier {
     _token = _value;
     prefs.setString('ff_token', _value);
   }
+
+  List<DocumentReference> _products = [];
+  List<DocumentReference> get products => _products;
+  set products(List<DocumentReference> _value) {
+    _products = _value;
+  }
+
+  void addToProducts(DocumentReference _value) {
+    _products.add(_value);
+  }
+
+  void removeFromProducts(DocumentReference _value) {
+    _products.remove(_value);
+  }
+
+  void removeAtIndexFromProducts(int _index) {
+    _products.removeAt(_index);
+  }
+
+  void updateProductsAtIndex(
+    int _index,
+    DocumentReference Function(DocumentReference) updateFn,
+  ) {
+    _products[_index] = updateFn(_products[_index]);
+  }
 }
 
 LatLng? _latLngFromString(String? val) {

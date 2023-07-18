@@ -152,29 +152,33 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                     shape: BoxShape.circle,
                   ),
                   alignment: AlignmentDirectional(0.0, 0.0),
-                  child: InkWell(
-                    splashColor: Colors.transparent,
-                    focusColor: Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    onTap: () async {
-                      logFirebaseEvent('APP_BAR_COMP_Stack_y5scmwtd_ON_TAP');
-                      logFirebaseEvent('Stack_navigate_to');
+                  child: Visibility(
+                    visible: loggedIn,
+                    child: InkWell(
+                      splashColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onTap: () async {
+                        logFirebaseEvent('APP_BAR_COMP_Stack_y5scmwtd_ON_TAP');
+                        logFirebaseEvent('Stack_navigate_to');
 
-                      context.pushNamed('checkout');
-                    },
-                    child: Stack(
-                      children: [
-                        if (loggedIn == true)
-                          Align(
-                            alignment: AlignmentDirectional(0.0, 0.0),
-                            child: FaIcon(
-                              FontAwesomeIcons.shoppingCart,
-                              color: FlutterFlowTheme.of(context).secondaryText,
-                              size: 20.0,
+                        context.pushNamed('checkout');
+                      },
+                      child: Stack(
+                        children: [
+                          if (loggedIn == true)
+                            Align(
+                              alignment: AlignmentDirectional(0.0, 0.0),
+                              child: FaIcon(
+                                FontAwesomeIcons.shoppingCart,
+                                color:
+                                    FlutterFlowTheme.of(context).secondaryText,
+                                size: 20.0,
+                              ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
