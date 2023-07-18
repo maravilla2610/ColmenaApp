@@ -36,6 +36,8 @@ class HomePageModel extends FlutterFlowModel {
   // State field(s) for TextField widget.
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
+  // Models for product dynamic component.
+  late FlutterFlowDynamicModels<ProductModel> productModels;
 
   /// Initialization and disposal methods.
 
@@ -43,6 +45,7 @@ class HomePageModel extends FlutterFlowModel {
     dropdown07AccountModel =
         createModel(context, () => Dropdown07AccountModel());
     appBarModel = createModel(context, () => AppBarModel());
+    productModels = FlutterFlowDynamicModels(() => ProductModel());
   }
 
   void dispose() {
@@ -50,6 +53,7 @@ class HomePageModel extends FlutterFlowModel {
     dropdown07AccountModel.dispose();
     appBarModel.dispose();
     textController?.dispose();
+    productModels.dispose();
   }
 
   /// Action blocks are added here.
