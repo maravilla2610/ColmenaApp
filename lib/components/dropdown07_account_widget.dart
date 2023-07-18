@@ -153,13 +153,15 @@ class _Dropdown07AccountWidgetState extends State<Dropdown07AccountWidget>
                         child: Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               2.0, 2.0, 2.0, 2.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: Image.network(
-                              'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8dXNlcnN8ZW58MHx8MHx8&auto=format&fit=crop&w=900&q=60',
-                              width: 36.0,
-                              height: 36.0,
-                              fit: BoxFit.cover,
+                          child: AuthUserStreamWidget(
+                            builder: (context) => ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0),
+                              child: Image.network(
+                                currentUserPhoto,
+                                width: 36.0,
+                                height: 36.0,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),
@@ -175,7 +177,7 @@ class _Dropdown07AccountWidgetState extends State<Dropdown07AccountWidget>
                         children: [
                           AuthUserStreamWidget(
                             builder: (context) => Text(
-                              currentUserDisplayName,
+                              valueOrDefault(currentUserDocument?.name, ''),
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(

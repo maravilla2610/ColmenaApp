@@ -111,11 +111,6 @@ class UsuariosRecord extends FirestoreRecord {
   DateTime? get createdTime => _createdTime;
   bool hasCreatedTime() => _createdTime != null;
 
-  // "phone_number" field.
-  String? _phoneNumber;
-  String get phoneNumber => _phoneNumber ?? '';
-  bool hasPhoneNumber() => _phoneNumber != null;
-
   // "firstLogin" field.
   bool? _firstLogin;
   bool get firstLogin => _firstLogin ?? false;
@@ -125,6 +120,11 @@ class UsuariosRecord extends FirestoreRecord {
   List<DocumentReference>? _orderLst;
   List<DocumentReference> get orderLst => _orderLst ?? const [];
   bool hasOrderLst() => _orderLst != null;
+
+  // "phone_number" field.
+  String? _phoneNumber;
+  String get phoneNumber => _phoneNumber ?? '';
+  bool hasPhoneNumber() => _phoneNumber != null;
 
   void _initializeFields() {
     _bdate = snapshotData['bdate'] as String?;
@@ -146,9 +146,9 @@ class UsuariosRecord extends FirestoreRecord {
     _photoUrl = snapshotData['photo_url'] as String?;
     _uid = snapshotData['uid'] as String?;
     _createdTime = snapshotData['created_time'] as DateTime?;
-    _phoneNumber = snapshotData['phone_number'] as String?;
     _firstLogin = snapshotData['firstLogin'] as bool?;
     _orderLst = getDataList(snapshotData['orderLst']);
+    _phoneNumber = snapshotData['phone_number'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -205,8 +205,8 @@ Map<String, dynamic> createUsuariosRecordData({
   String? photoUrl,
   String? uid,
   DateTime? createdTime,
-  String? phoneNumber,
   bool? firstLogin,
+  String? phoneNumber,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
@@ -229,8 +229,8 @@ Map<String, dynamic> createUsuariosRecordData({
       'photo_url': photoUrl,
       'uid': uid,
       'created_time': createdTime,
-      'phone_number': phoneNumber,
       'firstLogin': firstLogin,
+      'phone_number': phoneNumber,
     }.withoutNulls,
   );
 
@@ -262,9 +262,9 @@ class UsuariosRecordDocumentEquality implements Equality<UsuariosRecord> {
         e1?.photoUrl == e2?.photoUrl &&
         e1?.uid == e2?.uid &&
         e1?.createdTime == e2?.createdTime &&
-        e1?.phoneNumber == e2?.phoneNumber &&
         e1?.firstLogin == e2?.firstLogin &&
-        listEquality.equals(e1?.orderLst, e2?.orderLst);
+        listEquality.equals(e1?.orderLst, e2?.orderLst) &&
+        e1?.phoneNumber == e2?.phoneNumber;
   }
 
   @override
@@ -288,9 +288,9 @@ class UsuariosRecordDocumentEquality implements Equality<UsuariosRecord> {
         e?.photoUrl,
         e?.uid,
         e?.createdTime,
-        e?.phoneNumber,
         e?.firstLogin,
-        e?.orderLst
+        e?.orderLst,
+        e?.phoneNumber
       ]);
 
   @override
