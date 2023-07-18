@@ -14,7 +14,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import 'home_page_model.dart';
 export 'home_page_model.dart';
@@ -578,77 +577,68 @@ class _HomePageWidgetState extends State<HomePageWidget>
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(
                               0.0, 15.0, 0.0, 0.0),
-                          child: PagedListView<DocumentSnapshot<Object?>?,
-                              ProductosRecord>(
-                            pagingController: _model.setListViewController(
-                              ProductosRecord.collection,
-                            ),
-                            padding: EdgeInsets.zero,
-                            primary: false,
-                            shrinkWrap: true,
-                            reverse: false,
-                            scrollDirection: Axis.vertical,
-                            builderDelegate:
-                                PagedChildBuilderDelegate<ProductosRecord>(
-                              // Customize what your widget looks like when it's loading the first page.
-                              firstPageProgressIndicatorBuilder: (_) => Center(
-                                child: SizedBox(
-                                  width: 50.0,
-                                  height: 50.0,
-                                  child: SpinKitPulse(
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    size: 50.0,
-                                  ),
-                                ),
-                              ),
-                              // Customize what your widget looks like when it's loading another page.
-                              newPageProgressIndicatorBuilder: (_) => Center(
-                                child: SizedBox(
-                                  width: 50.0,
-                                  height: 50.0,
-                                  child: SpinKitPulse(
-                                    color: FlutterFlowTheme.of(context).primary,
-                                    size: 50.0,
-                                  ),
-                                ),
-                              ),
-
-                              itemBuilder: (context, _, listViewIndex) {
-                                final listViewProductosRecord = _model
-                                    .listViewPagingController!
-                                    .itemList![listViewIndex];
-                                return InkWell(
-                                  splashColor: Colors.transparent,
-                                  focusColor: Colors.transparent,
-                                  hoverColor: Colors.transparent,
-                                  highlightColor: Colors.transparent,
-                                  onTap: () async {
-                                    logFirebaseEvent(
-                                        'HOME_PAGE_PAGE_Container_jivysx22_ON_TAP');
-                                    logFirebaseEvent('product_navigate_to');
-
-                                    context.pushNamed(
-                                      'ItemDetail',
-                                      queryParameters: {
-                                        'itemParameter': serializeParam(
-                                          listViewProductosRecord,
-                                          ParamType.Document,
-                                        ),
-                                      }.withoutNulls,
-                                      extra: <String, dynamic>{
-                                        'itemParameter':
-                                            listViewProductosRecord,
-                                      },
-                                    );
-                                  },
-                                  child: ProductWidget(
-                                    key: Key(
-                                        'Keyjiv_${listViewIndex}_of_${_model.listViewPagingController!.itemList!.length}'),
-                                    products: homePageProductosRecordList,
+                          child: StreamBuilder<List<ProductosRecord>>(
+                            stream: queryProductosRecord(),
+                            builder: (context, snapshot) {
+                              // Customize what your widget looks like when it's loading.
+                              if (!snapshot.hasData) {
+                                return Center(
+                                  child: SizedBox(
+                                    width: 50.0,
+                                    height: 50.0,
+                                    child: SpinKitPulse(
+                                      color:
+                                          FlutterFlowTheme.of(context).primary,
+                                      size: 50.0,
+                                    ),
                                   ),
                                 );
-                              },
-                            ),
+                              }
+                              List<ProductosRecord>
+                                  listViewProductosRecordList = snapshot.data!;
+                              return ListView.builder(
+                                padding: EdgeInsets.zero,
+                                primary: false,
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount: listViewProductosRecordList.length,
+                                itemBuilder: (context, listViewIndex) {
+                                  final listViewProductosRecord =
+                                      listViewProductosRecordList[
+                                          listViewIndex];
+                                  return InkWell(
+                                    splashColor: Colors.transparent,
+                                    focusColor: Colors.transparent,
+                                    hoverColor: Colors.transparent,
+                                    highlightColor: Colors.transparent,
+                                    onTap: () async {
+                                      logFirebaseEvent(
+                                          'HOME_PAGE_PAGE_Container_jivysx22_ON_TAP');
+                                      logFirebaseEvent('product_navigate_to');
+
+                                      context.pushNamed(
+                                        'ItemDetail',
+                                        queryParameters: {
+                                          'itemParameter': serializeParam(
+                                            listViewProductosRecord,
+                                            ParamType.Document,
+                                          ),
+                                        }.withoutNulls,
+                                        extra: <String, dynamic>{
+                                          'itemParameter':
+                                              listViewProductosRecord,
+                                        },
+                                      );
+                                    },
+                                    child: ProductWidget(
+                                      key: Key(
+                                          'Keyjiv_${listViewIndex}_of_${listViewProductosRecordList.length}'),
+                                      products: homePageProductosRecordList,
+                                    ),
+                                  );
+                                },
+                              );
+                            },
                           ),
                         ),
                       ],

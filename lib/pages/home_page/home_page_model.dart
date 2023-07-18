@@ -7,8 +7,6 @@ import '/components/product_widget.dart';
 import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/request_manager.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +14,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 
 class HomePageModel extends FlutterFlowModel {
@@ -39,29 +36,6 @@ class HomePageModel extends FlutterFlowModel {
   // State field(s) for TextField widget.
   TextEditingController? textController;
   String? Function(BuildContext, String?)? textControllerValidator;
-  // State field(s) for ListView widget.
-
-  PagingController<DocumentSnapshot?, ProductosRecord>?
-      listViewPagingController;
-  Query? listViewPagingQuery;
-  List<StreamSubscription?> listViewStreamSubscriptions = [];
-
-  /// Query cache managers for this widget.
-
-  final _homeManager = FutureRequestManager<List<ProductosRecord>>();
-  Future<List<ProductosRecord>> home({
-    String? uniqueQueryKey,
-    bool? overrideCache,
-    required Future<List<ProductosRecord>> Function() requestFn,
-  }) =>
-      _homeManager.performRequest(
-        uniqueQueryKey: uniqueQueryKey,
-        overrideCache: overrideCache,
-        requestFn: requestFn,
-      );
-  void clearHomeCache() => _homeManager.clear();
-  void clearHomeCacheKey(String? uniqueKey) =>
-      _homeManager.clearRequest(uniqueKey);
 
   /// Initialization and disposal methods.
 
@@ -76,12 +50,6 @@ class HomePageModel extends FlutterFlowModel {
     dropdown07AccountModel.dispose();
     appBarModel.dispose();
     textController?.dispose();
-    listViewStreamSubscriptions.forEach((s) => s?.cancel());
-    listViewPagingController?.dispose();
-
-    /// Dispose query cache managers for this widget.
-
-    clearHomeCache();
   }
 
   /// Action blocks are added here.
@@ -89,35 +57,4 @@ class HomePageModel extends FlutterFlowModel {
   Future menu(BuildContext context) async {}
 
   /// Additional helper methods are added here.
-
-  PagingController<DocumentSnapshot?, ProductosRecord> setListViewController(
-    Query query, {
-    DocumentReference<Object?>? parent,
-  }) {
-    listViewPagingController ??= _createListViewController(query, parent);
-    if (listViewPagingQuery != query) {
-      listViewPagingQuery = query;
-      listViewPagingController?.refresh();
-    }
-    return listViewPagingController!;
-  }
-
-  PagingController<DocumentSnapshot?, ProductosRecord>
-      _createListViewController(
-    Query query,
-    DocumentReference<Object?>? parent,
-  ) {
-    final controller = PagingController<DocumentSnapshot?, ProductosRecord>(
-        firstPageKey: null);
-    return controller
-      ..addPageRequestListener(
-        (nextPageMarker) => queryProductosRecordPage(
-          nextPageMarker: nextPageMarker,
-          streamSubscriptions: listViewStreamSubscriptions,
-          controller: controller,
-          pageSize: 25,
-          isStream: true,
-        ),
-      );
-  }
 }
